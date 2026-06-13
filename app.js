@@ -1,16 +1,16 @@
-const express    = require('express');
-const mongoose   = require('mongoose');
-const morgan     = require('morgan');
-const cookieParser = require('cookie-parser');
+const express        = require('express');
+const morgan         = require('morgan');
+const cookieParser   = require('cookie-parser');
 const methodOverride = require('method-override');
-const path       = require('path');
-const dotenv     = require('dotenv');
+const path           = require('path');
+const dotenv         = require('dotenv');
 
 // Load environment variables first
 dotenv.config();
 
-const connectDatabase = require('./config/db');
-const logger          = require('./utils/logger');
+const connectDatabase                        = require('./config/db');
+const logger                                 = require('./utils/logger');
+const { globalErrorHandler, notFoundHandler } = require('./middleware/errorMiddleware');
 
 // =====================
 // Initialize App
@@ -27,7 +27,7 @@ connectDatabase();
 // Middleware
 // =====================
 
-// HTTP request logger (Morgan) — logs every request to console
+// HTTP request logger (Morgan)
 app.use(morgan('dev'));
 
 // Parse incoming JSON requests
@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 // Parse cookies from incoming requests
 app.use(cookieParser());
 
-// Allow PUT and DELETE from HTML forms using ?_method=PUT
+// Allow PUT and DELETE from HTML forms
 app.use(methodOverride('_method'));
 
 // Serve static files from public folder
@@ -54,33 +54,27 @@ app.set('views', path.join(__dirname, 'views'));
 // =====================
 // Routes
 // =====================
+const authRoutes = require('./routes/authRoutes');
+
+app.use('/', authRoutes);
 
 // Home route
 app.get('/', (req, res) => {
   res.render('pages/home', {
     title: 'Netflix Clone — Home',
+    user:  null,
   });
 });
 
 // =====================
 // 404 Handler
 // =====================
-app.use((req, res) => {
-  res.status(404).render('pages/home', {
-    title: 'Page Not Found',
-  });
-});
+app.use(notFoundHandler);
 
 // =====================
 // Global Error Handler
 // =====================
-app.use((err, req, res, next) => {
-  logger.error(`${err.message}`);
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Internal Server Error',
-  });
-});
+app.use(globalErrorHandler);
 
 // =====================
 // Start Server
