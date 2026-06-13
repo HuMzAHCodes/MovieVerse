@@ -1,0 +1,92 @@
+:root {
+  /* =====================
+     PRIMARY COLORS
+  ===================== */
+  --color-primary:        #e50914;   /* Netflix red */
+  --color-primary-hover:  #f40612;   /* Slightly brighter red on hover */
+  --color-primary-dark:   #b20710;   /* Darker red */
+
+  /* =====================
+     BACKGROUND COLORS
+  ===================== */
+  --color-bg-main:        #141414;   /* Main page background */
+  --color-bg-card:        #1f1f1f;   /* Movie cards */
+  --color-bg-navbar:      #000000;   /* Navbar */
+  --color-bg-footer:      #141414;   /* Footer */
+  --color-bg-input:       #333333;   /* Input fields */
+  --color-bg-overlay:     rgba(0, 0, 0, 0.6);  /* Hero overlay */
+
+  /* =====================
+     TEXT COLORS
+  ===================== */
+  --color-text-primary:   #ffffff;   /* Main text */
+  --color-text-secondary: #b3b3b3;   /* Muted text */
+  --color-text-muted:     #737373;   /* Very muted text */
+  --color-text-dark:      #000000;   /* Dark text */
+
+  /* =====================
+     BORDER COLORS
+  ===================== */
+  --color-border:         #333333;   /* General borders */
+  --color-border-input:   #555555;   /* Input borders */
+
+  /* =====================
+     STATUS COLORS
+  ===================== */
+  --color-success:        #2ecc71;   /* Success messages */
+  --color-error:          #e74c3c;   /* Error messages */
+  --color-warning:        #f39c12;   /* Warning messages */
+  --color-info:           #3498db;   /* Info messages */
+
+  /* =====================
+     FONTS
+  ===================== */
+  --font-primary:         'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-size-xs:         0.75rem;   /* 12px */
+  --font-size-sm:         0.875rem;  /* 14px */
+  --font-size-md:         1rem;      /* 16px */
+  --font-size-lg:         1.25rem;   /* 20px */
+  --font-size-xl:         1.5rem;    /* 24px */
+  --font-size-2xl:        2rem;      /* 32px */
+  --font-size-3xl:        3rem;      /* 48px */
+
+  /* =====================
+     SPACING
+  ===================== */
+  --spacing-xs:           4px;
+  --spacing-sm:           8px;
+  --spacing-md:           16px;
+  --spacing-lg:           24px;
+  --spacing-xl:           32px;
+  --spacing-2xl:          48px;
+  --spacing-3xl:          64px;
+
+  /* =====================
+     BORDER RADIUS
+  ===================== */
+  --radius-sm:            4px;
+  --radius-md:            8px;
+  --radius-lg:            12px;
+  --radius-full:          9999px;
+
+  /* =====================
+     SHADOWS
+  ===================== */
+  --shadow-card:          0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-navbar:        0 2px 10px rgba(0, 0, 0, 0.8);
+  --shadow-modal:         0 8px 32px rgba(0, 0, 0, 0.8);
+
+  /* =====================
+     TRANSITIONS
+  ===================== */
+  --transition-fast:      0.15s ease;
+  --transition-normal:    0.3s ease;
+  --transition-slow:      0.5s ease;
+
+  /* =====================
+     Z-INDEX
+  ===================== */
+  --z-navbar:             100;
+  --z-modal:              200;
+  --z-toast:              300;
+}
