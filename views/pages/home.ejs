@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+
+  <!-- ===================== -->
+  <!-- CSS                   -->
+  <!-- ===================== -->
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== -->
+  <!-- Navbar                -->
+  <!-- ===================== -->
+  <%- include('../partials/navbar') %>
+
+  <!-- ===================== -->
+  <!-- Hero Section          -->
+  <!-- ===================== -->
+  <section class="hero">
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <h1 class="hero__title">Unlimited movies, TV shows and more</h1>
+      <p class="hero__subtitle">Watch anywhere. Cancel anytime.</p>
+      <p class="hero__description">
+        Ready to watch? Create an account to start watching today.
+      </p>
+      <div class="hero__actions">
+        <a href="/register" class="btn btn--primary">Get Started</a>
+        <a href="/login"    class="btn btn--secondary">Sign In</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== -->
+  <!-- Features Section      -->
+  <!-- ===================== -->
+  <section class="features">
+    <div class="features__container">
+
+      <!-- Feature 1 -->
+      <div class="feature">
+        <div class="feature__text">
+          <h2 class="feature__title">Enjoy on your TV</h2>
+          <p class="feature__description">
+            Watch on smart TVs, PlayStation, Xbox, Chromecast,
+            Apple TV, Blu-ray players and more.
+          </p>
+        </div>
+        <div class="feature__image">
+          <img src="/images/tv.png" alt="Watch on TV" />
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature feature--reverse">
+        <div class="feature__text">
+          <h2 class="feature__title">Download your shows to watch offline</h2>
+          <p class="feature__description">
+            Save your favourites easily and always have
+            something to watch.
+          </p>
+        </div>
+        <div class="feature__image">
+          <img src="/images/mobile.png" alt="Watch on Mobile" />
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature">
+        <div
