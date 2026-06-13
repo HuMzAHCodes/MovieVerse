@@ -22,3 +22,5 @@ faqQuestions.forEach((question) => {
     icon.textContent = answer.classList.contains('active') ? '×' : '+';
   });
 });
+
+//
