@@ -1,0 +1,54 @@
+<nav class="navbar">
+  <div class="navbar__container">
+
+    <!-- ===================== -->
+    <!-- Logo                  -->
+    <!-- ===================== -->
+    <a href="/" class="navbar__logo">
+      NETFLIX
+    </a>
+
+    <!-- ===================== -->
+    <!-- Nav Links (logged in) -->
+    <!-- ===================== -->
+    <% if (typeof user !== 'undefined' && user) { %>
+      <ul class="navbar__links">
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/watchlist">My List</a></li>
+        <% if (user.role === 'admin') { %>
+          <li><a href="/admin">Admin</a></li>
+        <% } %>
+      </ul>
+
+      <!-- ===================== -->
+      <!-- Right Side            -->
+      <!-- ===================== -->
+      <div class="navbar__right">
+        <a href="/search" class="navbar__icon">🔍</a>
+        <div class="navbar__profile">
+          <img
+            src="<%= user.avatar || '/images/default-avatar.png' %>"
+            alt="<%= user.name %>"
+            class="navbar__avatar"
+          />
+          <div class="navbar__dropdown">
+            <a href="/profile">Profile</a>
+            <a href="/logout">Sign Out</a>
+          </div>
+        </div>
+      </div>
+
+    <% } else { %>
+
+      <!-- ===================== -->
+      <!-- Guest Links           -->
+      <!-- ===================== -->
+      <div class="navbar__right">
+        <a href="/login"    class="navbar__btn navbar__btn--signin">Sign In</a>
+        <a href="/register" class="navbar__btn navbar__btn--signup">Sign Up</a>
+      </div>
+
+    <% } %>
+
+  </div>
+</nav>
