@@ -54,9 +54,11 @@ app.set('views', path.join(__dirname, 'views'));
 // =====================
 // Routes
 // =====================
-const authRoutes = require('./routes/authRoutes');
+const authRoutes  = require('./routes/authRoutes');
+const movieRoutes = require('./routes/movieRoutes');
 
 app.use('/', authRoutes);
+app.use('/', movieRoutes);
 
 // Home route
 app.get('/', (req, res) => {
