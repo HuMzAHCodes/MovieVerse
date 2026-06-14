@@ -24,12 +24,15 @@ const protectRoute = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
     }
 
-    // No token found
-    if (!token) {
-      return next(
-        new AppError('You are not logged in. Please log in to continue', 401)
-      );
-    }
+      // No token found — redirect to login
+if (!token) {
+  if (req.originalUrl.startsWith('/api')) {
+    return next(
+      new AppError('You are not logged in. Please log in to continue', 401)
+    );
+  }
+  return res.redirect('/login');
+}
 
     // Verify the token
     const decodedToken = verifyToken(token);

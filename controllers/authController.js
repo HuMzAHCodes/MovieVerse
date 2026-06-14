@@ -53,13 +53,15 @@ const registerUser = async (req, res, next) => {
     // Send token in cookie
     sendTokenCookie(res, token);
 
-    // Send welcome email
-    await sendWelcomeEmail(newUser);
+    // Send welcome email (non-blocking — don't fail registration if email fails)
+sendWelcomeEmail(newUser).catch((emailError) => {
+  logger.error(`Welcome email failed: ${emailError.message}`);
+});
 
-    logger.info(`New user registered: ${newUser.email}`);
+logger.info(`New user registered: ${newUser.email}`);
 
-    // Redirect to browse page
-    res.status(201).redirect('/browse');
+// Redirect to browse page
+res.status(201).redirect('/browse');
   } catch (error) {
     logger.error(`Register error: ${error.message}`);
     next(error);

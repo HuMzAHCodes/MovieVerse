@@ -60,14 +60,6 @@ const movieRoutes = require('./routes/movieRoutes');
 app.use('/', authRoutes);
 app.use('/', movieRoutes);
 
-// Home route
-app.get('/', (req, res) => {
-  res.render('pages/home', {
-    title: 'Netflix Clone — Home',
-    user:  null,
-  });
-});
-
 // =====================
 // 404 Handler
 // =====================
