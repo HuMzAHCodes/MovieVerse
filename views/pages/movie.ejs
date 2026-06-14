@@ -1,0 +1,47 @@
+// =====================
+// Smooth Scroll to
+// Trailer on Click
+// =====================
+const watchTrailerBtn = document.getElementById('watchTrailerBtn');
+
+if (watchTrailerBtn) {
+  watchTrailerBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const trailerSection = document.getElementById('trailer');
+    if (trailerSection) {
+      trailerSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+}
+
+// =====================
+// Add to My List Button
+// =====================
+const addToListBtn = document.getElementById('addToListBtn');
+
+if (addToListBtn) {
+  addToListBtn.addEventListener('click', async () => {
+    const movieId    = addToListBtn.dataset.movieId;
+    const movieTitle = addToListBtn.dataset.movieTitle;
+    const moviePoster = addToListBtn.dataset.moviePoster;
+
+    try {
+      const response = await fetch('/api/users/watchlist', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ tmdbId: movieId, title: movieTitle, poster: moviePoster }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        addToListBtn.textContent = '✓ Added to List';
+        addToListBtn.disabled    = true;
+      } else {
+        alert(data.message || 'Could not add to list');
+      }
+    } catch (error) {
+      console.error('Add to list error:', error);
+    }
+  });
+}

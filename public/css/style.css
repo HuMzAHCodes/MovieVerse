@@ -462,3 +462,239 @@ button {
     align-items: center;
   }
 }
+
+
+
+/* =====================
+   MOVIE HERO
+===================== */
+.movie-hero {
+  position: relative;
+  height: 60vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: var(--spacing-3xl);
+  margin-top: 64px;
+}
+
+.movie-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+}
+
+.movie-hero__content {
+  position: relative;
+  z-index: 1;
+  padding: 0 var(--spacing-3xl);
+}
+
+.movie-hero__title {
+  font-size: var(--font-size-3xl);
+  font-weight: 900;
+  margin-bottom: var(--spacing-md);
+}
+
+.movie-hero__meta {
+  display: flex;
+  gap: var(--spacing-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.movie-hero__genres {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.movie-hero__genre-tag {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.movie-hero__genre-tag:hover {
+  background-color: var(--color-text-primary);
+  color: var(--color-text-dark);
+}
+
+/* =====================
+   MOVIE DETAIL
+===================== */
+.movie-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+}
+
+.movie-detail__container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: var(--spacing-3xl);
+  margin-bottom: var(--spacing-3xl);
+}
+
+.movie-detail__poster-img {
+  width: 100%;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.movie-detail__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 900;
+  margin-bottom: var(--spacing-md);
+}
+
+.movie-detail__overview {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-xl);
+}
+
+.movie-detail__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.movie-detail__stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.movie-detail__stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.movie-detail__stat-value {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.movie-detail__actions {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.movie-detail__btn {
+  padding: var(--spacing-sm) var(--spacing-xl);
+}
+
+/* =====================
+   TRAILER SECTION
+===================== */
+.trailer {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.trailer__title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+}
+
+.trailer__container {
+  width: 100%;
+}
+
+.trailer__wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.trailer__iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+}
+
+/* =====================
+   PRODUCTION COMPANIES
+===================== */
+.production {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.production__title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+}
+
+.production__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xl);
+  align-items: center;
+}
+
+.production__logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.production__logo:hover {
+  opacity: 1;
+}
+
+.production__name {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* =====================
+   RESPONSIVE MOVIE
+===================== */
+@media (max-width: 768px) {
+  .movie-detail__container {
+    grid-template-columns: 1fr;
+  }
+
+  .movie-detail__poster {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  .movie-detail__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .movie-hero__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .movie-hero__content {
+    padding: 0 var(--spacing-md);
+  }
+}
