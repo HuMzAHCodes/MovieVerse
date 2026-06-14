@@ -49,6 +49,11 @@ app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Serve static files with explicit paths
+app.use('/css',    express.static(path.join(__dirname, 'public', 'css')));
+app.use('/js',     express.static(path.join(__dirname, 'public', 'js')));
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+
 // =====================
 // Routes
 // =====================
@@ -57,11 +62,6 @@ const movieRoutes = require('./routes/movieRoutes');
 
 app.use('/', authRoutes);
 app.use('/', movieRoutes);
-
-
-
-// Serve static files from public folder
-app.use(express.static(path.join(__dirname, 'public')));
 
 // =====================
 // 404 Handler

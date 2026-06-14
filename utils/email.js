@@ -14,21 +14,27 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// =====================
-// Verify Transporter
-// =====================
-transporter.verify((error) => {
-  if (error) {
-    logger.error(`Email transporter error: ${error.message}`);
-  } else {
-    logger.info('Email transporter is ready');
-  }
-});
+// Verify Transporter (skip in test environment)
+if (process.env.NODE_ENV !== 'test') {
+  transporter.verify((error) => {
+    if (error) {
+      logger.error(`Email transporter error: ${error.message}`);
+    } else {
+      logger.info('Email transporter is ready');
+    }
+  });
+}
 
 // =====================
 // Base Email Sender
 // =====================
 const sendEmail = async ({ to, subject, html }) => {
+  // Skip sending emails in test environment
+  if (process.env.NODE_ENV === 'test') {
+    logger.info(`[TEST MODE] Email skipped for: ${to}`);
+    return { messageId: 'test-mode' };
+  }
+
   try {
     const mailOptions = {
       from:    process.env.EMAIL_FROM,
