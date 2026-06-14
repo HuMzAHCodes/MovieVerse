@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+
+  <!-- ===================== -->
+  <!-- CSS                   -->
+  <!-- ===================== -->
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== -->
+  <!-- Navbar                -->
+  <!-- ===================== -->
+  <%- include('../partials/navbar') %>
+
+  <!-- ===================== -->
+  <!-- Search Page           -->
+  <!-- ===================== -->
+  <main class="search-page">
+
+    <!-- ===================== -->
+    <!-- Search Bar           -->
+    <!-- ===================== -->
+    <section class="search-bar">
+      <div class="search-bar__container">
+        <form
+          action="/search"
+          method="GET"
+          class="search-bar__form"
+        >
+          <input
+            type="text"
+            name="q"
+            value="<%= query %>"
+            placeholder="Search movies, TV shows..."
+            class="search-bar__input"
+            autofocus
+          />
+          <button
+            type="submit"
+            class="search-bar__btn"
+          >
+            🔍 Search
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== -->
+    <!-- Search Results       -->
+    <!-- ===================== -->
+    <section class="search-results">
+      <div class="search-results__container">
+
+        <!-- Results Header -->
+        <% if (query) { %>
+          <div class="search-results__header">
+            <h2 class="search-results__title">
+              <% if (totalResults > 0) { %>
+                <%= totalResults.toLocaleString() %> results for
+                "<%= query %>"
+              <% } else { %>
+                No results found for "<%= query %>"
+              <% } %>
+            </h2>
+          </div>
+        <% } %>
+
+        <!-- No Results -->
+        <% if (query && results.length === 0) { %>
+          <div class="search-results__empty">
+            <p class="search-results__empty-icon">🎬</p>
+            <p class="search-results__empty-text">
+              No movies found for "<%= query %>"
+            </p>
+            <p class="search-results__empty-hint">
+              Try a different search term
+            </p>
+          </div>
+
+        <!-- Results Grid -->
+        <% } else if (results.length > 0) { %>
+          <div class="search-results__grid">
+            <% results.forEach((movie) => { %>
+              <%- include('../partials/movie-card', { movie }) %>
+            <% }) %>
+          </div>
+
+          <!-- ===================== -->
+          <!-- Pagination           -->
+          <!-- ===================== -->
+          <% if (totalPages > 1) { %>
+          <div class="pagination">
+
+            <!-- Previous -->
+            <% if (currentPage > 1) { %>
+              
+                href="/search?q=<%= query %>&page=<%= currentPage - 1 %>"
+                class="pagination__btn"
+              >
+                ← Previous
+              </a>
+            <% } %>
+
+            <!-- Page Numbers -->
+            <div class="pagination__pages">
+              <% 
+                const startPage = Math.max(1, currentPage - 2);
+                const endPage   = Math.min(totalPages, currentPage + 2);
+                for (let i = startPage; i <= endPage; i++) {
+              %>
+                
+                  href="/search?q=<%= query %>&page=<%= i %>"
+                  class="pagination__page
+                    <%= i === currentPage ? 'pagination__page--active' : '' %>"
+                >
+                  <%= i %>
+                </a>
+              <% } %>
+            </div>
+
+            <!-- Next -->
+            <% if (currentPage < totalPages) { %>
+              
+                href="/search?q=<%= query %>&page=<%= currentPage + 1 %>"
+                class="pagination__btn"
+              >
+                Next →
+              </a>
+            <% } %>
+
+          </div>
+          <% } %>
+
+        <% } %>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== -->
+  <!-- Footer                -->
+  <!-- ===================== -->
+  <%- include('../partials/footer') %>
+
+  <!-- ===================== -->
+  <!-- JS                    -->
+  <!-- ===================== -->
+  <script src="/js/main.js"></script>
+
+</body>
+</html>
