@@ -21,7 +21,7 @@ const registerUser = async (req, res, next) => {
   try {
     // Validate request body with Joi
     const { error, value } = registerValidator.validate(req.body, {
-      abortEarly: false, // Return all errors at once
+      abortEarly: false,
     });
 
     if (error) {
@@ -53,21 +53,21 @@ const registerUser = async (req, res, next) => {
     // Send token in cookie
     sendTokenCookie(res, token);
 
-    // Send welcome email (non-blocking — don't fail registration if email fails)
-sendWelcomeEmail(newUser).catch((emailError) => {
-  logger.error(`Welcome email failed: ${emailError.message}`);
-});
+    // Send welcome email (non-blocking)
+    sendWelcomeEmail(newUser).catch((emailError) => {
+      logger.error(`Welcome email failed: ${emailError.message}`);
+    });
 
-logger.info(`New user registered: ${newUser.email}`);
+    logger.info(`New user registered: ${newUser.email}`);
 
-// Redirect to browse page
-res.status(201).redirect('/browse');
+    // Redirect to browse page
+    return res.status(201).redirect('/browse');
+
   } catch (error) {
     logger.error(`Register error: ${error.message}`);
-    next(error);
+    return next(error);
   }
 };
-
 // =====================
 // @route   POST /api/auth/login
 // @desc    Login user

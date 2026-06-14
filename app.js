@@ -42,8 +42,6 @@ app.use(cookieParser());
 // Allow PUT and DELETE from HTML forms
 app.use(methodOverride('_method'));
 
-// Serve static files from public folder
-app.use(express.static(path.join(__dirname, 'public')));
 
 // =====================
 // View Engine — EJS
@@ -59,6 +57,11 @@ const movieRoutes = require('./routes/movieRoutes');
 
 app.use('/', authRoutes);
 app.use('/', movieRoutes);
+
+
+
+// Serve static files from public folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // =====================
 // 404 Handler
