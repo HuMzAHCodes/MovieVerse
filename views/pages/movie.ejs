@@ -1,47 +1,159 @@
-// =====================
-// Smooth Scroll to
-// Trailer on Click
-// =====================
-const watchTrailerBtn = document.getElementById('watchTrailerBtn');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
 
-if (watchTrailerBtn) {
-  watchTrailerBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const trailerSection = document.getElementById('trailer');
-    if (trailerSection) {
-      trailerSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-}
+  <%- include('../partials/navbar') %>
 
-// =====================
-// Add to My List Button
-// =====================
-const addToListBtn = document.getElementById('addToListBtn');
+  <!-- Movie Hero Banner -->
+  <section
+    class="movie-hero"
+    style="background-image: url('<%= movie.backdrop_path %>')"
+  >
+    <div class="movie-hero__overlay"></div>
+    <div class="movie-hero__content">
+      <h1 class="movie-hero__title"><%= movie.title %></h1>
+      <div class="movie-hero__meta">
+        <span class="movie-hero__rating">⭐ <%= movie.vote_average.toFixed(1) %></span>
+        <span class="movie-hero__year"><%= new Date(movie.release_date).getFullYear() %></span>
+        <span class="movie-hero__runtime">
+          <%= Math.floor(movie.runtime / 60) %>h <%= movie.runtime % 60 %>m
+        </span>
+      </div>
+      <div class="movie-hero__genres">
+        <% movie.genres.forEach((genre) => { %>
+          <a href="/genre/<%= genre.id %>" class="movie-hero__genre-tag">
+            <%= genre.name %>
+          </a>
+        <% }) %>
+      </div>
+    </div>
+  </section>
 
-if (addToListBtn) {
-  addToListBtn.addEventListener('click', async () => {
-    const movieId    = addToListBtn.dataset.movieId;
-    const movieTitle = addToListBtn.dataset.movieTitle;
-    const moviePoster = addToListBtn.dataset.moviePoster;
+  <!-- Movie Detail -->
+  <main class="movie-detail">
+    <div class="movie-detail__container">
 
-    try {
-      const response = await fetch('/api/users/watchlist', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ tmdbId: movieId, title: movieTitle, poster: moviePoster }),
-      });
+      <!-- Poster -->
+      <div class="movie-detail__poster">
+        <img
+          src="<%= movie.poster_path %>"
+          alt="<%= movie.title %>"
+          class="movie-detail__poster-img"
+        />
+      </div>
 
-      const data = await response.json();
+      <!-- Info -->
+      <div class="movie-detail__info">
+        <h2 class="movie-detail__title"><%= movie.title %></h2>
+        <p class="movie-detail__overview"><%= movie.overview %></p>
 
-      if (response.ok) {
-        addToListBtn.textContent = '✓ Added to List';
-        addToListBtn.disabled    = true;
-      } else {
-        alert(data.message || 'Could not add to list');
-      }
-    } catch (error) {
-      console.error('Add to list error:', error);
-    }
-  });
-}
+        <div class="movie-detail__stats">
+          <div class="movie-detail__stat">
+            <span class="movie-detail__stat-label">Rating</span>
+            <span class="movie-detail__stat-value">⭐ <%= movie.vote_average.toFixed(1) %> / 10</span>
+          </div>
+          <div class="movie-detail__stat">
+            <span class="movie-detail__stat-label">Release Date</span>
+            <span class="movie-detail__stat-value"><%= new Date(movie.release_date).toDateString() %></span>
+          </div>
+          <div class="movie-detail__stat">
+            <span class="movie-detail__stat-label">Runtime</span>
+            <span class="movie-detail__stat-value">
+              <%= Math.floor(movie.runtime / 60) %>h <%= movie.runtime % 60 %>m
+            </span>
+          </div>
+          <div class="movie-detail__stat">
+            <span class="movie-detail__stat-label">Language</span>
+            <span class="movie-detail__stat-value"><%= movie.original_language.toUpperCase() %></span>
+          </div>
+          <div class="movie-detail__stat">
+            <span class="movie-detail__stat-label">Status</span>
+            <span class="movie-detail__stat-value"><%= movie.status %></span>
+          </div>
+          <div class="movie-detail__stat">
+            <span class="movie-detail__stat-label">Votes</span>
+            <span class="movie-detail__stat-value"><%= movie.vote_count.toLocaleString() %></span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="movie-detail__actions">
+          <% if (trailer) { %>
+            <a href="#trailer" class="btn btn--primary movie-detail__btn" id="watchTrailerBtn">
+              ▶ Watch Trailer
+            </a>
+          <% } else { %>
+            <button class="btn btn--secondary movie-detail__btn" disabled>
+              No Trailer Available
+            </button>
+          <% } %>
+          <button
+            class="btn btn--secondary movie-detail__btn"
+            id="addToListBtn"
+            data-movie-id="<%= movie.id %>"
+            data-movie-title="<%= movie.title %>"
+            data-movie-poster="<%= movie.poster_path %>"
+          >
+            + My List
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trailer Section -->
+    <% if (trailer) { %>
+    <section class="trailer" id="trailer">
+      <h2 class="trailer__title">🎬 Official Trailer</h2>
+      <div class="trailer__container">
+        <div class="trailer__wrapper">
+          <iframe
+            class="trailer__iframe"
+            src="https://www.youtube.com/embed/<%= trailer.key %>?rel=0&modestbranding=1"
+            title="<%= movie.title %> Trailer"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- Production Companies -->
+    <% if (movie.production_companies.length > 0) { %>
+    <section class="production">
+      <h2 class="production__title">Production Companies</h2>
+      <div class="production__list">
+        <% movie.production_companies.forEach((company) => { %>
+          <div class="production__company">
+            <% if (company.logo_path) { %>
+              <img
+                src="https://image.tmdb.org/t/p/w200<%= company.logo_path %>"
+                alt="<%= company.name %>"
+                class="production__logo"
+              />
+            <% } else { %>
+              <span class="production__name"><%= company.name %></span>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
+    </section>
+    <% } %>
+
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/movie.js"></script>
+
+</body>
+</html>
