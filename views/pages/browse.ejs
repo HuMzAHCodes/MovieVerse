@@ -1,239 +1,89 @@
-/* =====================
-   BROWSE HERO
-===================== */
-.browse-hero {
-  position: relative;
-  height: 80vh;
-  background-size: cover;
-  background-position: center top;
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: var(--spacing-3xl);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
 
-.browse-hero__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    rgba(0, 0, 0, 0.1) 100%
-  );
-}
+  <%- include('../partials/navbar') %>
 
-.browse-hero__content {
-  position: relative;
-  z-index: 1;
-  max-width: 550px;
-  padding: 0 var(--spacing-3xl);
-}
+  <!-- Hero Banner -->
+  <% if (heroMovie) { %>
+  <section
+    class="browse-hero"
+    style="background-image: url('<%= heroMovie.backdrop_path %>')"
+  >
+    <div class="browse-hero__overlay"></div>
+    <div class="browse-hero__content">
+      <h1 class="browse-hero__title"><%= heroMovie.title %></h1>
+      <p class="browse-hero__description">
+        <%= heroMovie.overview.slice(0, 150) %>...
+      </p>
+      <div class="browse-hero__actions">
+        <a href="/movie/<%= heroMovie.id %>" class="btn btn--primary">
+          ▶ Watch Trailer
+        </a>
+        <button class="btn btn--secondary">+ My List</button>
+      </div>
+      <div class="browse-hero__meta">
+        <span class="browse-hero__rating">⭐ <%= heroMovie.vote_average.toFixed(1) %></span>
+        <span class="browse-hero__year"><%= new Date(heroMovie.release_date).getFullYear() %></span>
+      </div>
+    </div>
+  </section>
+  <% } %>
 
-.browse-hero__title {
-  font-size: var(--font-size-3xl);
-  font-weight: 900;
-  margin-bottom: var(--spacing-md);
-  line-height: 1.1;
-}
+  <!-- Genre Filter Bar -->
+  <section class="genre-bar">
+    <div class="genre-bar__container">
+      <a href="/browse" class="genre-bar__item genre-bar__item--active">All</a>
+      <% allGenres.slice(0, 10).forEach((genre) => { %>
+        <a href="/genre/<%= genre.id %>" class="genre-bar__item">
+          <%= genre.name %>
+        </a>
+      <% }) %>
+    </div>
+  </section>
 
-.browse-hero__description {
-  font-size: var(--font-size-md);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-lg);
-  line-height: 1.6;
-}
+  <!-- Movie Rows -->
+  <main class="browse">
 
-.browse-hero__actions {
-  display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  flex-wrap: wrap;
-}
+    <section class="movie-row">
+      <h2 class="movie-row__title">🔥 Trending This Week</h2>
+      <div class="movie-row__slider">
+        <% trendingMovies.forEach((movie) => { %>
+          <%- include('../partials/movie-card', { movie }) %>
+        <% }) %>
+      </div>
+    </section>
 
-.browse-hero__meta {
-  display: flex;
-  gap: var(--spacing-md);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-}
+    <section class="movie-row">
+      <h2 class="movie-row__title">🎬 Popular Movies</h2>
+      <div class="movie-row__slider">
+        <% popularMovies.forEach((movie) => { %>
+          <%- include('../partials/movie-card', { movie }) %>
+        <% }) %>
+      </div>
+    </section>
 
-/* =====================
-   GENRE BAR
-===================== */
-.genre-bar {
-  background-color: var(--color-bg-main);
-  padding: var(--spacing-md) 0;
-  position: sticky;
-  top: 64px;
-  z-index: 50;
-  border-bottom: 1px solid var(--color-border);
-}
+    <section class="movie-row">
+      <h2 class="movie-row__title">⭐ Top Rated</h2>
+      <div class="movie-row__slider">
+        <% topRatedMovies.forEach((movie) => { %>
+          <%- include('../partials/movie-card', { movie }) %>
+        <% }) %>
+      </div>
+    </section>
 
-.genre-bar__container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-xl);
-  display: flex;
-  gap: var(--spacing-sm);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
+  </main>
 
-.genre-bar__container::-webkit-scrollbar {
-  display: none;
-}
+  <%- include('../partials/footer') %>
 
-.genre-bar__item {
-  white-space: nowrap;
-  padding: var(--spacing-xs) var(--spacing-md);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border);
-  transition: all var(--transition-fast);
-}
+  <script src="/js/main.js"></script>
 
-.genre-bar__item:hover,
-.genre-bar__item--active {
-  background-color: var(--color-text-primary);
-  color: var(--color-text-dark);
-  border-color: var(--color-text-primary);
-}
-
-/* =====================
-   BROWSE PAGE
-===================== */
-.browse {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-xl);
-}
-
-/* =====================
-   MOVIE ROWS
-===================== */
-.movie-row {
-  margin-bottom: var(--spacing-3xl);
-}
-
-.movie-row__title {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  margin-bottom: var(--spacing-md);
-  color: var(--color-text-primary);
-}
-
-.movie-row__slider {
-  display: flex;
-  gap: var(--spacing-sm);
-  overflow-x: auto;
-  padding-bottom: var(--spacing-md);
-  scrollbar-width: none;
-}
-
-.movie-row__slider::-webkit-scrollbar {
-  display: none;
-}
-
-/* =====================
-   MOVIE CARD
-===================== */
-.movie-card {
-  flex: 0 0 180px;
-  position: relative;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  transition: transform var(--transition-normal);
-  cursor: pointer;
-}
-
-.movie-card:hover {
-  transform: scale(1.05);
-  z-index: 10;
-}
-
-.movie-card__poster {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 2/3;
-}
-
-.movie-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-}
-
-.movie-card__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.95) 0%,
-    rgba(0, 0, 0, 0.3) 60%,
-    transparent 100%
-  );
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-  display: flex;
-  align-items: flex-end;
-  border-radius: var(--radius-sm);
-}
-
-.movie-card:hover .movie-card__overlay {
-  opacity: 1;
-}
-
-.movie-card__overlay-content {
-  padding: var(--spacing-sm);
-  width: 100%;
-}
-
-.movie-card__title {
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  margin-bottom: var(--spacing-xs);
-  color: var(--color-text-primary);
-  line-height: 1.3;
-}
-
-.movie-card__meta {
-  display: flex;
-  gap: var(--spacing-sm);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.movie-card__play {
-  width: 100%;
-  padding: var(--spacing-xs);
-  background-color: var(--color-primary);
-  color: var(--color-text-primary);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  transition: background-color var(--transition-fast);
-}
-
-.movie-card__play:hover {
-  background-color: var(--color-primary-hover);
-}
-
-/* =====================
-   RESPONSIVE BROWSE
-===================== */
-@media (max-width: 768px) {
-  .browse-hero__title {
-    font-size: var(--font-size-2xl);
-  }
-
-  .browse-hero__content {
-    padding: 0 var(--spacing-md);
-  }
-
-  .movie-card {
-    flex: 0 0 130px;
-  }
-}
+</body>
+</html>
