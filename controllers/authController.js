@@ -40,12 +40,12 @@ const registerUser = async (req, res, next) => {
     }
 
     // Create new user
-console.log('CREATING USER...');
+
 const newUser = await User.create({ name, email, password });
-console.log('USER CREATED:', newUser._id);
+
 
 // Generate JWT token
-console.log('GENERATING TOKEN...');
+
 const token = generateToken({
       id:    newUser._id,
       name:  newUser.name,
@@ -64,8 +64,7 @@ sendWelcomeEmail(newUser).catch((emailError) => {
 logger.info(`New user registered: ${newUser.email}`);
 
 // Debug — remove after fix
-console.log('ABOUT TO REDIRECT, res.headersSent:', res.headersSent);
-console.log('TYPE OF NEXT:', typeof next);
+
 
 // Redirect to browse page
 return res.status(201).redirect('/browse');
