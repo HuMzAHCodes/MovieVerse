@@ -1,0 +1,45 @@
+<!-- ===================== -->
+<!-- Movie Card            -->
+<!-- ===================== -->
+<div class="movie-card">
+  <a href="/movie/<%= movie.id %>">
+
+    <!-- Poster -->
+    <div class="movie-card__poster">
+      <img
+        src="<%= movie.poster_path %>"
+        alt="<%= movie.title %>"
+        class="movie-card__img"
+        loading="lazy"
+      />
+
+      <!-- Hover Overlay -->
+      <div class="movie-card__overlay">
+        <div class="movie-card__overlay-content">
+
+          <h3 class="movie-card__title">
+            <%= movie.title %>
+          </h3>
+
+          <div class="movie-card__meta">
+            <span class="movie-card__rating">
+              ⭐ <%= movie.vote_average.toFixed(1) %>
+            </span>
+            <span class="movie-card__year">
+              <%= movie.release_date
+                ? new Date(movie.release_date).getFullYear()
+                : 'N/A'
+              %>
+            </span>
+          </div>
+
+          <button class="movie-card__play">
+            ▶ Watch Trailer
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+  </a>
+</div>
