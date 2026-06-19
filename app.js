@@ -5,6 +5,13 @@ const methodOverride = require('method-override');
 const path           = require('path');
 const dotenv         = require('dotenv');
 
+
+
+// Force Google DNS to bypass ISP DNS blocking
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 // Load environment variables first
 dotenv.config();
 

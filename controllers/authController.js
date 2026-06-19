@@ -40,10 +40,13 @@ const registerUser = async (req, res, next) => {
     }
 
     // Create new user
-    const newUser = await User.create({ name, email, password });
+console.log('CREATING USER...');
+const newUser = await User.create({ name, email, password });
+console.log('USER CREATED:', newUser._id);
 
-    // Generate JWT token
-    const token = generateToken({
+// Generate JWT token
+console.log('GENERATING TOKEN...');
+const token = generateToken({
       id:    newUser._id,
       name:  newUser.name,
       email: newUser.email,
@@ -51,17 +54,21 @@ const registerUser = async (req, res, next) => {
     });
 
     // Send token in cookie
-    sendTokenCookie(res, token);
+sendTokenCookie(res, token);
 
-    // Send welcome email (non-blocking)
-    sendWelcomeEmail(newUser).catch((emailError) => {
-      logger.error(`Welcome email failed: ${emailError.message}`);
-    });
+// Send welcome email (non-blocking)
+sendWelcomeEmail(newUser).catch((emailError) => {
+  logger.error(`Welcome email failed: ${emailError.message}`);
+});
 
-    logger.info(`New user registered: ${newUser.email}`);
+logger.info(`New user registered: ${newUser.email}`);
 
-    // Redirect to browse page
-    return res.status(201).redirect('/browse');
+// Debug — remove after fix
+console.log('ABOUT TO REDIRECT, res.headersSent:', res.headersSent);
+console.log('TYPE OF NEXT:', typeof next);
+
+// Redirect to browse page
+return res.status(201).redirect('/browse');
 
   } catch (error) {
     logger.error(`Register error: ${error.message}`);

@@ -1,119 +1,39 @@
-/* =====================
-   AUTH PAGES
-   (Login & Register)
-===================== */
-.auth-page {
-  background-color: var(--color-bg-main);
-}
-
-.auth {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-3xl) var(--spacing-md);
-  background-image: url('/images/hero-bg.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
-.auth__container {
-  background-color: rgba(0, 0, 0, 0.75);
-  padding: var(--spacing-3xl);
-  border-radius: var(--radius-md);
-  width: 100%;
-  max-width: 450px;
-}
-
-.auth__title {
-  font-size: var(--font-size-2xl);
-  font-weight: 900;
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-xl);
-}
-
-.auth__error {
-  background-color: rgba(229, 9, 20, 0.2);
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-sm);
-}
-
-.auth__form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.auth__field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.auth__input {
-  width: 100%;
-  padding: var(--spacing-md);
-  background-color: var(--color-bg-input);
-  border: 1px solid var(--color-border-input);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-md);
-  transition: border-color var(--transition-fast);
-}
-
-.auth__input:focus {
-  outline: none;
-  border-color: var(--color-text-secondary);
-}
-
-.auth__input::placeholder {
-  color: var(--color-text-muted);
-}
-
-.auth__btn {
-  width: 100%;
-  padding: var(--spacing-md);
-  font-size: var(--font-size-md);
-  margin-top: var(--spacing-sm);
-}
-
-.auth__forgot {
-  text-align: right;
-  margin-top: var(--spacing-sm);
-}
-
-.auth__forgot a {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  transition: color var(--transition-fast);
-}
-
-.auth__forgot a:hover {
-  color: var(--color-text-primary);
-}
-
-.auth__divider {
-  text-align: center;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  margin: var(--spacing-lg) 0;
-}
-
-.auth__switch {
-  text-align: center;
-}
-
-.auth__switch-link {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  transition: color var(--transition-fast);
-}
-
-.auth__switch-link:hover {
-  color: var(--color-primary);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="auth-page">
+  <%- include('../partials/navbar') %>
+  <main class="auth">
+    <div class="auth__container">
+      <h1 class="auth__title">Sign In</h1>
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="auth__error"><%= error %></div>
+      <% } %>
+      <form class="auth__form" action="/api/auth/login" method="POST">
+        <div class="auth__field">
+          <input type="email" name="email" placeholder="Email address" class="auth__input" required autocomplete="email" />
+        </div>
+        <div class="auth__field">
+          <input type="password" name="password" placeholder="Password" class="auth__input" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn--primary auth__btn">Sign In</button>
+      </form>
+      <div class="auth__forgot">
+        <a href="/forgot-password">Forgot password?</a>
+      </div>
+      <div class="auth__divider"><span>New to Netflix Clone?</span></div>
+      <div class="auth__switch">
+        <a href="/register" class="auth__switch-link">Sign up now</a>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

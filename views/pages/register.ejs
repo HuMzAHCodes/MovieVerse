@@ -1,20 +1,45 @@
-/* =====================
-   AUTH TERMS TEXT
-===================== */
-.auth__terms {
-  text-align: center;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-lg);
-  line-height: 1.6;
-}
-
-.auth__terms a {
-  color: var(--color-text-secondary);
-  text-decoration: underline;
-  transition: color var(--transition-fast);
-}
-
-.auth__terms a:hover {
-  color: var(--color-text-primary);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="auth-page">
+  <%- include('../partials/navbar') %>
+  <main class="auth">
+    <div class="auth__container">
+      <h1 class="auth__title">Sign Up</h1>
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="auth__error"><%= error %></div>
+      <% } %>
+      <form class="auth__form" action="/api/auth/register" method="POST">
+        <div class="auth__field">
+          <input type="text" name="name" placeholder="Full name" class="auth__input" required autocomplete="name" />
+        </div>
+        <div class="auth__field">
+          <input type="email" name="email" placeholder="Email address" class="auth__input" required autocomplete="email" />
+        </div>
+        <div class="auth__field">
+          <input type="password" name="password" placeholder="Password" class="auth__input" required autocomplete="new-password" />
+        </div>
+        <div class="auth__field">
+          <input type="password" name="confirmPassword" placeholder="Confirm password" class="auth__input" required autocomplete="new-password" />
+        </div>
+        <button type="submit" class="btn btn--primary auth__btn">Create Account</button>
+      </form>
+      <div class="auth__divider"><span>Already have an account?</span></div>
+      <div class="auth__switch">
+        <a href="/login" class="auth__switch-link">Sign in now</a>
+      </div>
+      <p class="auth__terms">
+        By signing up, you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+      </p>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>
