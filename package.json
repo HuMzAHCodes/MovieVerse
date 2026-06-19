@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "cross-env NODE_ENV=test jest --testEnvironment node --forceExit"
+    "test": "cross-env NODE_ENV=test jest --testEnvironment node --forceExit --runInBand"
   },
   "keywords": [],
   "author": "",
