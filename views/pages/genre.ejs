@@ -19,74 +19,70 @@
   <%- include('../partials/navbar') %>
 
   <!-- ===================== -->
-  <!-- Search Page           -->
+  <!-- Genre Page            -->
   <!-- ===================== -->
-  <main class="search-page">
+  <main class="genre-page">
 
     <!-- ===================== -->
-    <!-- Search Bar           -->
+    <!-- Genre Header         -->
     <!-- ===================== -->
-    <section class="search-bar">
-      <div class="search-bar__container">
-        <form
-          action="/search"
-          method="GET"
-          class="search-bar__form"
-        >
-          <input
-            type="text"
-            name="q"
-            value="<%= query %>"
-            placeholder="Search movies, TV shows..."
-            class="search-bar__input"
-            autofocus
-          />
-          <button
-            type="submit"
-            class="search-bar__btn"
-          >
-            🔍 Search
-          </button>
-        </form>
+    <section class="genre-header">
+      <div class="genre-header__container">
+        <a href="/browse" class="genre-header__back">
+          ← Back to Browse
+        </a>
+        <h1 class="genre-header__title">
+          <%= currentGenre ? currentGenre.name : 'Movies' %>
+        </h1>
+        <p class="genre-header__subtitle">
+          Browse all <%= currentGenre ? currentGenre.name : '' %> movies
+        </p>
       </div>
     </section>
 
     <!-- ===================== -->
-    <!-- Search Results       -->
+    <!-- Genre Filter Bar     -->
     <!-- ===================== -->
-    <section class="search-results">
-      <div class="search-results__container">
+    <section class="genre-bar">
+      <div class="genre-bar__container">
+        <a href="/browse" class="genre-bar__item">
+          All
+        </a>
+        <% allGenres.slice(0, 10).forEach((genre) => { %>
+          
+            href="/genre/<%= genre.id %>"
+            class="genre-bar__item
+              <%= currentGenre && currentGenre.id === genre.id
+                ? 'genre-bar__item--active' : '' %>"
+          >
+            <%= genre.name %>
+          </a>
+        <% }) %>
+      </div>
+    </section>
 
-        <!-- Results Header -->
-        <% if (query) { %>
-          <div class="search-results__header">
-            <h2 class="search-results__title">
-              <% if (totalResults > 0) { %>
-                <%= totalResults.toLocaleString() %> results for
-                "<%= query %>"
-              <% } else { %>
-                No results found for "<%= query %>"
-              <% } %>
-            </h2>
-          </div>
-        <% } %>
+    <!-- ===================== -->
+    <!-- Movies Grid          -->
+    <!-- ===================== -->
+    <section class="genre-results">
+      <div class="genre-results__container">
 
-        <!-- No Results -->
-        <% if (query && results.length === 0) { %>
+        <% if (movies.length === 0) { %>
+          <!-- No Movies Found -->
           <div class="search-results__empty">
             <p class="search-results__empty-icon">🎬</p>
             <p class="search-results__empty-text">
-              No movies found for "<%= query %>"
+              No movies found for this genre
             </p>
-            <p class="search-results__empty-hint">
-              Try a different search term
-            </p>
+            <a href="/browse" class="btn btn--primary">
+              Back to Browse
+            </a>
           </div>
 
-        <!-- Results Grid -->
-        <% } else if (results.length > 0) { %>
+        <% } else { %>
+          <!-- Movies Grid -->
           <div class="search-results__grid">
-            <% results.forEach((movie) => { %>
+            <% movies.forEach((movie) => { %>
               <%- include('../partials/movie-card', { movie }) %>
             <% }) %>
           </div>
@@ -100,7 +96,7 @@
             <!-- Previous -->
             <% if (currentPage > 1) { %>
               
-                href="/search?q=<%= query %>&page=<%= currentPage - 1 %>"
+                href="/genre/<%= currentGenre.id %>?page=<%= currentPage - 1 %>"
                 class="pagination__btn"
               >
                 ← Previous
@@ -109,15 +105,16 @@
 
             <!-- Page Numbers -->
             <div class="pagination__pages">
-              <% 
+              <%
                 const startPage = Math.max(1, currentPage - 2);
                 const endPage   = Math.min(totalPages, currentPage + 2);
                 for (let i = startPage; i <= endPage; i++) {
               %>
                 
-                  href="/search?q=<%= query %>&page=<%= i %>"
+                  href="/genre/<%= currentGenre.id %>?page=<%= i %>"
                   class="pagination__page
-                    <%= i === currentPage ? 'pagination__page--active' : '' %>"
+                    <%= i === currentPage
+                      ? 'pagination__page--active' : '' %>"
                 >
                   <%= i %>
                 </a>
@@ -127,7 +124,7 @@
             <!-- Next -->
             <% if (currentPage < totalPages) { %>
               
-                href="/search?q=<%= query %>&page=<%= currentPage + 1 %>"
+                href="/genre/<%= currentGenre.id %>?page=<%= currentPage + 1 %>"
                 class="pagination__btn"
               >
                 Next →
