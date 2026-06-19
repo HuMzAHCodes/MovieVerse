@@ -11,7 +11,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await User.deleteMany({ email: /test/i });
+  await User.deleteMany({ email: /movietest/i });
   await mongoose.connection.close();
 });
 
@@ -22,8 +22,8 @@ const loginTestUser = async () => {
   await request(app)
     .post('/api/auth/register')
     .send({
-      name:            'Test User',
-      email:           'test@example.com',
+      name:            'Movie Test User',
+      email:           'movietest@example.com',
       password:        'password123',
       confirmPassword: 'password123',
     });
@@ -31,7 +31,7 @@ const loginTestUser = async () => {
   const loginResponse = await request(app)
     .post('/api/auth/login')
     .send({
-      email:    'test@example.com',
+      email:    'movietest@example.com',
       password: 'password123',
     });
 
@@ -44,7 +44,7 @@ const loginTestUser = async () => {
 describe('GET /browse', () => {
 
   afterEach(async () => {
-    await User.deleteMany({ email: /test/i });
+    await User.deleteMany({ email: /movietest/i });
   });
 
   test('should redirect to login if not authenticated', async () => {
@@ -77,7 +77,7 @@ describe('GET /movie/:tmdbId', () => {
   });
 
   afterEach(async () => {
-    await User.deleteMany({ email: /test/i });
+    await User.deleteMany({ email: /movietest/i });
   });
 
   test('should redirect to login if not authenticated', async () => {
@@ -125,7 +125,7 @@ describe('GET /search', () => {
   });
 
   afterEach(async () => {
-    await User.deleteMany({ email: /test/i });
+    await User.deleteMany({ email: /movietest/i });
   });
 
   test('should redirect to login if not authenticated', async () => {
@@ -183,7 +183,7 @@ describe('GET /genre/:genreId', () => {
   });
 
   afterEach(async () => {
-    await User.deleteMany({ email: /test/i });
+    await User.deleteMany({ email: /movietest/i });
   });
 
   test('should redirect to login if not authenticated', async () => {
