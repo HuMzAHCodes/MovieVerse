@@ -8,6 +8,8 @@ const User     = require('../models/User');
 // =====================
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_URI_TEST || process.env.MONGO_URI);
+  // Clean up before starting
+  await User.deleteMany({ email: /movietest/i });
 });
 
 afterAll(async () => {
@@ -19,6 +21,7 @@ afterAll(async () => {
 // Test Helper
 // =====================
 const loginTestUser = async () => {
+  // Try to register — ignore if already exists
   await request(app)
     .post('/api/auth/register')
     .send({
@@ -42,10 +45,6 @@ const loginTestUser = async () => {
 // BROWSE PAGE TESTS
 // =====================
 describe('GET /browse', () => {
-
-  afterEach(async () => {
-    await User.deleteMany({ email: /movietest/i });
-  });
 
   test('should redirect to login if not authenticated', async () => {
     const response = await request(app).get('/browse');
@@ -72,12 +71,8 @@ describe('GET /movie/:tmdbId', () => {
 
   let authCookie;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     authCookie = await loginTestUser();
-  });
-
-  afterEach(async () => {
-    await User.deleteMany({ email: /movietest/i });
   });
 
   test('should redirect to login if not authenticated', async () => {
@@ -120,12 +115,8 @@ describe('GET /search', () => {
 
   let authCookie;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     authCookie = await loginTestUser();
-  });
-
-  afterEach(async () => {
-    await User.deleteMany({ email: /movietest/i });
   });
 
   test('should redirect to login if not authenticated', async () => {
@@ -178,12 +169,8 @@ describe('GET /genre/:genreId', () => {
 
   let authCookie;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     authCookie = await loginTestUser();
-  });
-
-  afterEach(async () => {
-    await User.deleteMany({ email: /movietest/i });
   });
 
   test('should redirect to login if not authenticated', async () => {
