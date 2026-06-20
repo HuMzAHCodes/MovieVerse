@@ -1,43 +1,44 @@
 const mongoose = require('mongoose');
 const logger = require('../utils/logger');
 
-// Extract database connection URI from environment variables
 const DATABASE_URI = process.env.MONGO_URI;
 
-// Mongoose connection options
 const connectionOptions = {
-  autoIndex: true,        // Build indexes automatically
-  maxPoolSize: 10,        // Maintain up to 10 socket connections
-  serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds if no server found
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+  autoIndex: true,
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
 };
 
+let isConnected = false;
+
 const connectDatabase = async () => {
+  if (isConnected) return;
+
+  if (!DATABASE_URI) {
+    throw new Error('MONGO_URI environment variable is not defined');
+  }
+
   try {
     const connection = await mongoose.connect(DATABASE_URI, connectionOptions);
-
+    isConnected = true;
     logger.info(`MongoDB Atlas connected: ${connection.connection.host}`);
   } catch (error) {
     logger.error(`MongoDB connection failed: ${error.message}`);
-    // Exit process with failure if database connection fails
-    process.exit(1);
+    // ★ NEVER call process.exit() in serverless — it kills the function
+    throw new Error(`MongoDB connection failed: ${error.message}`);
   }
 };
 
-// Monitor connection events
-mongoose.connection.on('disconnected', () => {
-  logger.warn('MongoDB disconnected');
-});
+if (!process.env.VERCEL) {
+  mongoose.connection.on('disconnected', () => logger.warn('MongoDB disconnected'));
+  mongoose.connection.on('reconnected', () => logger.info('MongoDB reconnected'));
 
-mongoose.connection.on('reconnected', () => {
-  logger.info('MongoDB reconnected');
-});
-
-// Gracefully close connection when app is terminated
-process.on('SIGINT', async () => {
-  await mongoose.connection.close();
-  logger.info('MongoDB connection closed due to app termination');
-  process.exit(0);
-});
+  process.on('SIGINT', async () => {
+    await mongoose.connection.close();
+    logger.info('MongoDB connection closed due to app termination');
+    process.exit(0);
+  });
+}
 
 module.exports = connectDatabase;

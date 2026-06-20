@@ -28,7 +28,10 @@ const PORT = process.env.PORT || 3000;
 // =====================
 // Connect to Database
 // =====================
-connectDatabase();
+// NEW ★
+connectDatabase().catch(err => {
+  logger.error(`Initial DB connection failed: ${err.message}`);
+});
 
 // =====================
 // Middleware
