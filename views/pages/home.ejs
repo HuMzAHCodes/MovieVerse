@@ -18,6 +18,12 @@
   <!-- ===================== -->
   <%- include('../partials/navbar') %>
 
+  <% if (typeof message !== 'undefined' && message) { %>
+    <div class="error-banner" style="background-color: #e50914; color: #ffffff; padding: var(--spacing-md, 15px); text-align: center; font-weight: bold; position: relative; z-index: 1000; font-family: sans-serif;">
+      <%= message %>
+    </div>
+  <% } %>
+
   <!-- ===================== -->
   <!-- Hero Section          -->
   <!-- ===================== -->

@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const app      = require('../app');
 const User     = require('../models/User');
 
+// Increase Jest timeout for registration/login operations (bcrypt and DB latency)
+jest.setTimeout(30000);
+
 // =====================
 // Test Setup & Teardown
 // =====================

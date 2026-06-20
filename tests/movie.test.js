@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const app      = require('../app');
 const User     = require('../models/User');
 
+// Increase Jest timeout for registration/network operations
+jest.setTimeout(30000);
+
 // =====================
 // Shared auth cookie
 // across all tests
