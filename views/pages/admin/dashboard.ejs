@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    /* Admin Dashboard Specific Styles */
+    .admin-page {
+      min-height: 100vh;
+      background-color: var(--color-bg-main);
+      padding: var(--spacing-3xl) var(--spacing-xl);
+      margin-top: 64px;
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-2xl);
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+
+    .admin-header__title {
+      font-size: var(--font-size-2xl);
+      font-weight: 800;
+      color: var(--color-text-primary);
+    }
+
+    .admin-header__actions {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .stats-card {
+      background-color: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .stats-card__label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .stats-card__value {
+      font-size: var(--font-size-3xl);
+      font-weight: 900;
+      color: var(--color-text-primary);
+    }
+
+    /* Recent Users List */
+    .recent-section {
+      background-color: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-card);
+    }
+
+    .recent-section__title {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--spacing-sm);
+    }
+
+    .recent-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .recent-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .recent-table th {
+      padding: var(--spacing-md);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .recent-table td {
+      padding: var(--spacing-md);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .recent-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .recent-table__user {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .recent-table__avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      object-fit: cover;
+    }
+
+    .recent-table__name {
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px var(--spacing-sm);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge--admin {
+      background-color: rgba(229, 9, 20, 0.15);
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
+    }
+
+    .badge--user {
+      background-color: rgba(52, 152, 219, 0.15);
+      color: var(--color-info);
+      border: 1px solid var(--color-info);
+    }
+
+    @media (max-width: 768px) {
+      .admin-page {
+        padding: var(--spacing-2xl) var(--spacing-md);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('../partials/navbar') %>
+
+  <main class="admin-page">
+    <div class="admin-container">
+      
+      <!-- Admin Header -->
+      <div class="admin-header">
+        <h1 class="admin-header__title">Admin Dashboard</h1>
+        <div class="admin-header__actions">
+          <a href="/admin/users" class="btn btn--primary">
+            Manage Users
+          </a>
+          <a href="/browse" class="btn btn--secondary">
+            Exit Admin
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stats-card">
+          <span class="stats-card__label">Total Registrations</span>
+          <span class="stats-card__value"><%= stats.totalUsers %></span>
+        </div>
+        <div class="stats-card">
+          <span class="stats-card__label">Regular Users</span>
+          <span class="stats-card__value"><%= stats.regularUsers %></span>
+        </div>
+        <div class="stats-card">
+          <span class="stats-card__label">Administrators</span>
+          <span class="stats-card__value"><%= stats.adminUsers %></span>
+        </div>
+        <div class="stats-card">
+          <span class="stats-card__label">Movies Saved (List Items)</span>
+          <span class="stats-card__value"><%= stats.totalWatchlistMovies %></span>
+        </div>
+      </div>
+
+      <!-- Recent Registrations -->
+      <div class="recent-section">
+        <h2 class="recent-section__title">Recent User Registrations</h2>
+        <div class="recent-table-wrapper">
+          <table class="recent-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% recentUsers.forEach((recent) => { %>
+                <tr>
+                  <td>
+                    <div class="recent-table__user">
+                      <img
+                        src="<%= recent.avatar || '/images/default-avatar.png' %>"
+                        alt="<%= recent.name %>"
+                        class="recent-table__avatar"
+                      />
+                      <span class="recent-table__name"><%= recent.name %></span>
+                    </div>
+                  </td>
+                  <td><%= recent.email %></td>
+                  <td>
+                    <span class="badge badge--<%= recent.role %>">
+                      <%= recent.role %>
+                    </span>
+                  </td>
+                  <td><%= new Date(recent.createdAt).toLocaleDateString() %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+</body>
+</html>
