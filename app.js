@@ -67,10 +67,12 @@ app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 const authRoutes  = require('./routes/authRoutes');
 const movieRoutes = require('./routes/movieRoutes');
 const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 app.use('/', authRoutes);
 app.use('/', movieRoutes);
 app.use('/', userRoutes);
+app.use('/', adminRoutes);
 
 // =====================
 // 404 Handler
