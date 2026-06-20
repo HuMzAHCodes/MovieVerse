@@ -30,4 +30,17 @@ This document stores important engineering and design decisions, architectural c
 
 ### 5. Multi-Layer Logging (Morgan + Winston)
 * **Decision:** Utilize Morgan for dev terminal HTTP request logging and Winston to write error and combined logs to persistent files (`logs/error.log`, `logs/combined.log`).
-* **Rationale:** Keeps clean console outputs in production while keeping detailed logs for debugging runtime failures.
+* **Vercel Adjustment:** When running on Vercel (`process.env.VERCEL` is defined), file transports are completely disabled, and Winston prints formatted logs directly to `transports.Console`. This avoids fatal write errors due to Vercel's read-only serverless filesystem.
+* **Rationale:** Keeps clean console outputs in production while keeping detailed logs for debugging runtime failures, and prevents EROFS (Read-Only Filesystem) crashes in serverless deployments.
+
+### 6. EJS Views Bundling on Vercel
+* **Decision:** Explicitly tell Vercel to bundle EJS views.
+* **Rationale:** Vercel's bundler analyzes static imports. Because EJS views are resolved dynamically at runtime (via `res.render`), they are normally excluded from the serverless build. We configure `vercel.json` to include `"views/**"` inside the serverless functions bundler scope.
+* **Code Implementation:**
+  ```json
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "views/**"
+    }
+  }
+  ```

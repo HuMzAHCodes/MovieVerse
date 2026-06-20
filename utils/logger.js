@@ -21,31 +21,35 @@ const fileFormat = combine(
   logFormat
 );
 
-// File transports
-const errorFileTransport = new transports.File({
-  filename: 'logs/error.log',
-  level: 'error',
-});
+const loggerTransports = [];
 
-const combinedFileTransport = new transports.File({
-  filename: 'logs/combined.log',
-});
+// Only use file logging if we are not running on Vercel (read-only filesystem)
+if (!process.env.VERCEL) {
+  loggerTransports.push(
+    new transports.File({
+      filename: 'logs/error.log',
+      level: 'error',
+    }),
+    new transports.File({
+      filename: 'logs/combined.log',
+    })
+  );
+}
 
-// Console transport (only in development)
-const consoleTransport = new transports.Console({
-  format: consoleFormat,
-});
+// Always log to console on Vercel or in non-production environments
+if (process.env.VERCEL || process.env.NODE_ENV !== 'production') {
+  loggerTransports.push(
+    new transports.Console({
+      format: consoleFormat,
+    })
+  );
+}
 
 // Create the logger
 const logger = createLogger({
   level: 'info',
   format: fileFormat,
-  transports: [errorFileTransport, combinedFileTransport],
+  transports: loggerTransports,
 });
-
-// Add console logging in development mode
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(consoleTransport);
-}
 
 module.exports = logger;
