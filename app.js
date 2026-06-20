@@ -81,10 +81,11 @@ app.use(notFoundHandler);
 app.use(globalErrorHandler);
 
 // =====================
-// Start Server
-// =====================
-app.listen(PORT, () => {
-  logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+// Start Server only when not in serverless environments (like Vercel)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  });
+}
 
 module.exports = app;
