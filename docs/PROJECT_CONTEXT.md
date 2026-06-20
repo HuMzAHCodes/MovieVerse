@@ -38,14 +38,17 @@ This project is a full-featured, Netflix-inspired streaming platform built using
   * Details page rendering structure in [movie.ejs](file:///D:/netflix-clone/views/pages/movie.ejs) and [movieController.js](file:///D:/netflix-clone/controllers/movieController.js).
   * Client-side JavaScript interactions implemented in [movie.js](file:///D:/netflix-clone/public/js/movie.js).
   * Added unit test assertions inside [tmdb.test.js](file:///D:/netflix-clone/tests/tmdb.test.js) and [movie.test.js](file:///D:/netflix-clone/tests/movie.test.js).
+* **Phase 5: User Features (Watchlist & Profile)**
+  * Implemented [Watchlist.js](file:///D:/netflix-clone/models/Watchlist.js) model.
+  * Added profile updating controller logic, Joi validators, and EJS profile/watchlist views.
+  * Added Multer + Cloudinary configurations in [cloudinary.js](file:///D:/netflix-clone/config/cloudinary.js) to support upload storage.
+  * Created integration test suite inside [user.test.js](file:///D:/netflix-clone/tests/user.test.js).
 
 ### Current Phase (In Progress)
-* **Phase 5: User Features (Watchlist & Profile)**
-  * Watchlist schema, add/delete controllers, profile page, and avatar upload to Cloudinary.
-
-### Future Phases
 * **Phase 6: Admin Panel**
   * Admin dashboard and user management routes/views.
+
+### Future Phases
 * **Phase 7: API Documentation (Swagger)**
   * Endpoint documentation at `/api-docs`.
 * **Phase 8: Polish & Deployment**
