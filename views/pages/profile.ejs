@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    /* Profile Page Specific Styles */
+    .profile-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-3xl) var(--spacing-md);
+      background-color: var(--color-bg-main);
+    }
+
+    .profile-card {
+      background-color: var(--color-bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      width: 100%;
+      max-width: 500px;
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-modal);
+    }
+
+    .profile-card__header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .profile-card__title {
+      font-size: var(--font-size-2xl);
+      font-weight: 800;
+      color: var(--color-text-primary);
+    }
+
+    .profile-card__subtitle {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      margin-top: var(--spacing-xs);
+    }
+
+    .profile-card__alert {
+      padding: var(--spacing-md);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--spacing-lg);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .profile-card__alert--error {
+      background-color: rgba(231, 76, 60, 0.15);
+      border: 1px solid var(--color-error);
+      color: var(--color-error);
+    }
+
+    .profile-card__alert--success {
+      background-color: rgba(46, 204, 113, 0.15);
+      border: 1px solid var(--color-success);
+      color: var(--color-success);
+    }
+
+    .profile-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .profile-form__avatar-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .profile-form__preview-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 2px solid var(--color-border);
+      box-shadow: var(--shadow-card);
+    }
+
+    .profile-form__preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-form__file-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border: 1px solid var(--color-border-input);
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-input);
+      transition: all var(--transition-fast);
+    }
+
+    .profile-form__file-label:hover {
+      border-color: var(--color-text-secondary);
+      color: var(--color-text-primary);
+    }
+
+    .profile-form__file-input {
+      display: none;
+    }
+
+    .profile-form__group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .profile-form__label {
+      font-size: var(--font-size-xs);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--color-text-muted);
+      font-weight: 700;
+    }
+
+    .profile-form__input {
+      padding: var(--spacing-md);
+      background-color: var(--color-bg-input);
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-md);
+      transition: border-color var(--transition-fast);
+    }
+
+    .profile-form__input:focus {
+      outline: none;
+      border-color: var(--color-text-secondary);
+    }
+
+    .profile-form__input--readonly {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .profile-form__actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+
+    .profile-form__btn {
+      width: 100%;
+      text-align: center;
+      padding: var(--spacing-md) var(--spacing-xl);
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('../partials/navbar') %>
+
+  <main class="profile-page">
+    <div class="profile-card">
+      <div class="profile-card__header">
+        <h1 class="profile-card__title">Edit Profile</h1>
+        <p class="profile-card__subtitle">Update your personal account details</p>
+      </div>
+
+      <% if (error) { %>
+        <div class="profile-card__alert profile-card__alert--error">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <% if (success) { %>
+        <div class="profile-card__alert profile-card__alert--success">
+          <%= success %>
+        </div>
+      <% } %>
+
+      <form action="/api/users/profile" method="POST" enctype="multipart/form-data" class="profile-form">
+        
+        <!-- Avatar Section -->
+        <div class="profile-form__avatar-section">
+          <div class="profile-form__preview-container">
+            <img
+              src="<%= user.avatar || '/images/default-avatar.png' %>"
+              alt="<%= user.name %>"
+              class="profile-form__preview-img"
+              id="avatarPreview"
+            />
+          </div>
+          <label for="avatarInput" class="profile-form__file-label">Change Avatar</label>
+          <input
+            type="file"
+            name="avatar"
+            id="avatarInput"
+            class="profile-form__file-input"
+            accept="image/*"
+          />
+        </div>
+
+        <!-- Name Input -->
+        <div class="profile-form__group">
+          <label for="nameInput" class="profile-form__label">Profile Name</label>
+          <input
+            type="text"
+            name="name"
+            id="nameInput"
+            class="profile-form__input"
+            value="<%= user.name %>"
+            required
+          />
+        </div>
+
+        <!-- Email Input (Readonly) -->
+        <div class="profile-form__group">
+          <label class="profile-form__label">Email Address (Cannot Change)</label>
+          <input
+            type="email"
+            class="profile-form__input profile-form__input--readonly"
+            value="<%= user.email %>"
+            readonly
+          />
+        </div>
+
+        <!-- Actions -->
+        <div class="profile-form__actions">
+          <button type="submit" class="btn btn--primary profile-form__btn">
+            Save Changes
+          </button>
+          <a href="/browse" class="btn btn--secondary profile-form__btn">
+            Cancel
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script>
+    // Client-side image preview
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarPreview = document.getElementById('avatarPreview');
+
+    if (avatarInput && avatarPreview) {
+      avatarInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            avatarPreview.src = event.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
