@@ -84,6 +84,8 @@ describe('GET /movie/:tmdbId', () => {
 
     expect(response.status).toBe(200);
     expect(response.text).toContain('Fight Club');
+    expect(response.text).toContain('iframe');
+    expect(response.text).toContain('https://www.youtube.com/embed/');
   }, 15000);
 
   test('should return 400 for invalid movie ID', async () => {
