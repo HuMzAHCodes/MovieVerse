@@ -31,6 +31,16 @@ const browsePage = async (req, res, next) => {
       getAllGenres(),
     ]);
 
+    // ★ TEMP DEBUG — remove after fix
+    console.log('TMDB DEBUG:', {
+      trending: trendingMovies.length,
+      popular:  popularMovies.length,
+      topRated: topRatedMovies.length,
+      genres:   allGenres.length,
+      tmdbKey:  process.env.TMDB_API_KEY  ? 'EXISTS' : 'MISSING',
+      tmdbUrl:  process.env.TMDB_BASE_URL ? 'EXISTS' : 'MISSING',
+    });
+
     // Use first trending movie as hero banner
     const heroMovie = trendingMovies[0] || null;
 
@@ -38,7 +48,7 @@ const browsePage = async (req, res, next) => {
       title:          'Browse — Netflix Clone',
       user:           req.user,
       heroMovie,
-      trendingMovies: trendingMovies.slice(1), // Skip hero movie
+      trendingMovies: trendingMovies.slice(1),
       popularMovies,
       topRatedMovies,
       allGenres,
@@ -58,21 +68,18 @@ const movieDetailPage = async (req, res, next) => {
   try {
     const { tmdbId } = req.params;
 
-    // Validate tmdbId is a number
     if (isNaN(tmdbId)) {
       return next(new AppError('Invalid movie ID', 400));
     }
 
     const Watchlist = require('../models/Watchlist');
 
-    // Fetch movie details, trailer, and check watchlist status in parallel
     const [movieDetails, movieTrailer, watchlist] = await Promise.all([
       getMovieDetails(tmdbId),
       getMovieTrailer(tmdbId),
       Watchlist.findOne({ user: req.user.id, 'movies.tmdbId': parseInt(tmdbId) }),
     ]);
 
-    // Movie not found
     if (!movieDetails) {
       return next(new AppError('Movie not found', 404));
     }
@@ -102,7 +109,6 @@ const searchPage = async (req, res, next) => {
     const query       = req.query.q    || '';
     const currentPage = parseInt(req.query.page) || 1;
 
-    // Don't search if query is empty
     if (!query.trim()) {
       return res.render('pages/search', {
         title:        'Search — Netflix Clone',
@@ -115,7 +121,6 @@ const searchPage = async (req, res, next) => {
       });
     }
 
-    // Search TMDB
     const searchResults = await searchMovies(query, currentPage);
 
     res.render('pages/search', {
@@ -143,18 +148,15 @@ const genrePage = async (req, res, next) => {
     const { genreId }  = req.params;
     const currentPage  = parseInt(req.query.page) || 1;
 
-    // Validate genreId
     if (isNaN(genreId)) {
       return next(new AppError('Invalid genre ID', 400));
     }
 
-    // Fetch genres and movies in parallel
     const [genreMovies, allGenres] = await Promise.all([
       getMoviesByGenre(genreId, currentPage),
       getAllGenres(),
     ]);
 
-    // Find current genre name
     const currentGenre = allGenres.find(
       (genre) => genre.id === parseInt(genreId)
     );
