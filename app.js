@@ -69,6 +69,22 @@ app.use('/css',    express.static(path.join(__dirname, 'public', 'css')));
 app.use('/js',     express.static(path.join(__dirname, 'public', 'js')));
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
+
+
+
+
+
+// =====================
+// Swagger API Docs
+// =====================
+const swaggerUi   = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
+
+
+
+
+
+
 // =====================
 // Routes
 // =====================
@@ -76,6 +92,31 @@ const authRoutes  = require('./routes/authRoutes');
 const movieRoutes = require('./routes/movieRoutes');
 const userRoutes  = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+
+
+
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customSiteTitle: 'Netflix Clone API Docs',
+  customCss: `
+    .swagger-ui .topbar { background-color: #141414; }
+    .swagger-ui .topbar-wrapper img { display: none; }
+    .swagger-ui .topbar-wrapper::before {
+      content: 'NETFLIX CLONE API';
+      color: #e50914;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+  `,
+}));
+
+
+
+
+
+
 
 app.use('/', authRoutes);
 app.use('/', movieRoutes);
