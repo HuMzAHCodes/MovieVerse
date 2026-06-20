@@ -63,10 +63,13 @@ const movieDetailPage = async (req, res, next) => {
       return next(new AppError('Invalid movie ID', 400));
     }
 
-    // Fetch movie details and trailer in parallel
-    const [movieDetails, movieTrailer] = await Promise.all([
+    const Watchlist = require('../models/Watchlist');
+
+    // Fetch movie details, trailer, and check watchlist status in parallel
+    const [movieDetails, movieTrailer, watchlist] = await Promise.all([
       getMovieDetails(tmdbId),
       getMovieTrailer(tmdbId),
+      Watchlist.findOne({ user: req.user.id, 'movies.tmdbId': parseInt(tmdbId) }),
     ]);
 
     // Movie not found
@@ -74,11 +77,14 @@ const movieDetailPage = async (req, res, next) => {
       return next(new AppError('Movie not found', 404));
     }
 
+    const isInWatchlist = !!watchlist;
+
     res.render('pages/movie', {
       title:        `${movieDetails.title} — Netflix Clone`,
       user:         req.user,
       movie:        movieDetails,
       trailer:      movieTrailer,
+      isInWatchlist,
     });
   } catch (error) {
     logger.error(`Movie detail page error: ${error.message}`);

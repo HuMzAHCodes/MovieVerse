@@ -18,18 +18,45 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const addToListBtn = document.getElementById('addToListBtn');
   if (addToListBtn) {
-    addToListBtn.addEventListener('click', () => {
+    addToListBtn.addEventListener('click', async () => {
+      const tmdbId = addToListBtn.dataset.movieId;
+      const title  = addToListBtn.dataset.movieTitle;
+      const poster = addToListBtn.dataset.moviePoster;
+
       const isAdded = addToListBtn.classList.contains('btn--added');
-      if (isAdded) {
-        addToListBtn.classList.remove('btn--added');
-        addToListBtn.textContent = '+ My List';
-        addToListBtn.style.color = '';
-        addToListBtn.style.borderColor = '';
-      } else {
-        addToListBtn.classList.add('btn--added');
-        addToListBtn.textContent = '✓ In My List';
-        // Green feedback color when added
-        addToListBtn.style.color = '#2ecc71';
+
+      try {
+        if (isAdded) {
+          // Send DELETE request to remove from watchlist
+          const response = await fetch(`/api/users/watchlist/${tmdbId}`, {
+            method: 'DELETE',
+          });
+          const data = await response.json();
+
+          if (data.success) {
+            addToListBtn.classList.remove('btn--added');
+            addToListBtn.textContent = '+ My List';
+            addToListBtn.style.color = '';
+          }
+        } else {
+          // Send POST request to add to watchlist
+          const response = await fetch('/api/users/watchlist', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tmdbId, title, poster }),
+          });
+          const data = await response.json();
+
+          if (data.success) {
+            addToListBtn.classList.add('btn--added');
+            addToListBtn.textContent = '✓ In My List';
+            addToListBtn.style.color = '#2ecc71';
+          }
+        }
+      } catch (error) {
+        console.error('Watchlist toggle error:', error);
       }
     });
   }

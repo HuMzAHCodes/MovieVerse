@@ -95,13 +95,14 @@
             </button>
           <% } %>
           <button
-            class="btn btn--secondary movie-detail__btn"
+            class="btn btn--secondary movie-detail__btn<%= isInWatchlist ? ' btn--added' : '' %>"
             id="addToListBtn"
             data-movie-id="<%= movie.id %>"
             data-movie-title="<%= movie.title %>"
             data-movie-poster="<%= movie.poster_path %>"
+            <% if (isInWatchlist) { %>style="color: #2ecc71;"<% } %>
           >
-            + My List
+            <%= isInWatchlist ? '✓ In My List' : '+ My List' %>
           </button>
         </div>
       </div>
