@@ -12,14 +12,18 @@ const router = express.Router();
 
 // =====================
 // Page Routes (GET)
-// Must be defined BEFORE
-// any middleware that
-// could intercept them
 // =====================
 
-// @route   GET /
-// @desc    Home page
-// @access  Public
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Home landing page
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Renders the home landing page
+ */
 router.get('/', (req, res) => {
   res.render('pages/home', {
     title: 'Netflix Clone — Home',
@@ -27,9 +31,16 @@ router.get('/', (req, res) => {
   });
 });
 
-// @route   GET /register
-// @desc    Show register page
-// @access  Public
+/**
+ * @swagger
+ * /register:
+ *   get:
+ *     summary: Render register page
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Renders the user registration form
+ */
 router.get('/register', (req, res) => {
   res.render('pages/register', {
     title: 'Register — Netflix Clone',
@@ -37,9 +48,16 @@ router.get('/register', (req, res) => {
   });
 });
 
-// @route   GET /login
-// @desc    Show login page
-// @access  Public
+/**
+ * @swagger
+ * /login:
+ *   get:
+ *     summary: Render login page
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Renders the user login form
+ */
 router.get('/login', (req, res) => {
   res.render('pages/login', {
     title: 'Login — Netflix Clone',
@@ -47,9 +65,16 @@ router.get('/login', (req, res) => {
   });
 });
 
-// @route   GET /forgot-password
-// @desc    Show forgot password page
-// @access  Public
+/**
+ * @swagger
+ * /forgot-password:
+ *   get:
+ *     summary: Render forgot password page
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Renders the forgot password form
+ */
 router.get('/forgot-password', (req, res) => {
   res.render('pages/forgot-password', {
     title: 'Forgot Password — Netflix Clone',
@@ -57,9 +82,23 @@ router.get('/forgot-password', (req, res) => {
   });
 });
 
-// @route   GET /reset-password/:token
-// @desc    Show reset password page
-// @access  Public
+/**
+ * @swagger
+ * /reset-password/{token}:
+ *   get:
+ *     summary: Render reset password page
+ *     tags: [Authentication]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Password reset token from email
+ *     responses:
+ *       200:
+ *         description: Renders the reset password form
+ */
 router.get('/reset-password/:token', (req, res) => {
   res.render('pages/reset-password', {
     title: 'Reset Password — Netflix Clone',
@@ -72,29 +111,147 @@ router.get('/reset-password/:token', (req, res) => {
 // API Routes (POST)
 // =====================
 
-// @route   POST /api/auth/register
-// @desc    Register a new user
-// @access  Public
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterInput'
+ *     responses:
+ *       302:
+ *         description: Registration successful — redirects to /browse
+ *       400:
+ *         description: Validation error or email already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.post('/api/auth/register', registerUser);
 
-// @route   POST /api/auth/login
-// @desc    Login user
-// @access  Public
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login user and set JWT cookie
+ *     tags: [Authentication]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginInput'
+ *     responses:
+ *       302:
+ *         description: Login successful — redirects to /browse or /admin
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Invalid email or password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.post('/api/auth/login', loginUser);
 
-// @route   GET /logout
-// @desc    Logout user
-// @access  Private
+/**
+ * @swagger
+ * /logout:
+ *   get:
+ *     summary: Logout user and clear JWT cookie
+ *     tags: [Authentication]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       302:
+ *         description: Logout successful — redirects to /login
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.get('/logout', protectRoute, logoutUser);
 
-// @route   POST /api/auth/forgot-password
-// @desc    Send password reset email
-// @access  Public
+/**
+ * @swagger
+ * /api/auth/forgot-password:
+ *   post:
+ *     summary: Send password reset email
+ *     tags: [Authentication]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ForgotPasswordInput'
+ *     responses:
+ *       200:
+ *         description: Reset email sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         description: Invalid email format
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         description: No account found with that email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.post('/api/auth/forgot-password', forgotPassword);
 
-// @route   POST /api/auth/reset-password/:token
-// @desc    Reset password
-// @access  Public
+/**
+ * @swagger
+ * /api/auth/reset-password/{token}:
+ *   post:
+ *     summary: Reset user password using token
+ *     tags: [Authentication]
+ *     security: []
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Password reset token from email link
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ResetPasswordInput'
+ *     responses:
+ *       302:
+ *         description: Password reset successful — redirects to /browse
+ *       400:
+ *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.post('/api/auth/reset-password/:token', resetPassword);
 
 module.exports = router;
