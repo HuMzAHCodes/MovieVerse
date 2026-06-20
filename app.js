@@ -5,8 +5,6 @@ const methodOverride = require('method-override');
 const path           = require('path');
 const dotenv         = require('dotenv');
 
-
-
 // Force Google DNS to bypass ISP DNS blocking
 const dns = require('dns');
 dns.setDefaultResultOrder('ipv4first');
@@ -15,8 +13,8 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 // Load environment variables first
 dotenv.config();
 
-const connectDatabase                        = require('./config/db');
-const logger                                 = require('./utils/logger');
+const connectDatabase                         = require('./config/db');
+const logger                                  = require('./utils/logger');
 const { globalErrorHandler, notFoundHandler } = require('./middleware/errorMiddleware');
 
 // =====================
@@ -26,11 +24,17 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // =====================
-// Connect to Database
+// Database Middleware
+// (Ensures DB is connected
+//  before every request)
 // =====================
-// NEW ★
-connectDatabase().catch(err => {
-  logger.error(`Initial DB connection failed: ${err.message}`);
+app.use(async (req, res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 // =====================
@@ -52,14 +56,15 @@ app.use(cookieParser());
 // Allow PUT and DELETE from HTML forms
 app.use(methodOverride('_method'));
 
-
 // =====================
 // View Engine — EJS
 // =====================
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files with explicit paths
+// =====================
+// Static Files
+// =====================
 app.use('/css',    express.static(path.join(__dirname, 'public', 'css')));
 app.use('/js',     express.static(path.join(__dirname, 'public', 'js')));
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
@@ -69,7 +74,7 @@ app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 // =====================
 const authRoutes  = require('./routes/authRoutes');
 const movieRoutes = require('./routes/movieRoutes');
-const userRoutes = require('./routes/userRoutes');
+const userRoutes  = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
 app.use('/', authRoutes);
@@ -88,7 +93,10 @@ app.use(notFoundHandler);
 app.use(globalErrorHandler);
 
 // =====================
-// Start Server only when not in serverless environments (like Vercel)
+// Start Server
+// (Local only — Vercel
+//  handles this itself)
+// =====================
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
