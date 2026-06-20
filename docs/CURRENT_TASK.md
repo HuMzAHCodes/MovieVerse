@@ -21,9 +21,13 @@ Phase 5 (User Features: Watchlist & Profile) has been fully implemented, verifie
 
 ---
 
-## 🚀 Next Up: Phase 6 — Admin Panel
-We are ready to move on to Phase 6. This includes:
-1. Creating the admin controller (`adminController.js`) and routes (`adminRoutes.js`).
-2. Creating the admin dashboard views (`views/pages/admin/dashboard.ejs` and `views/pages/admin/users.ejs`).
-3. Implementing routes to view app statistics (total users, total watchlist counts) and manage (delete) users.
-4. Protecting admin routes using `protectRoute` and `roleMiddleware` (restricting access to `admin` users only).
+## 📋 Task Checklist
+
+- [x] Create admin controller [adminController.js](file:///D:/netflix-clone/controllers/adminController.js) (dashboard stats, user management logic).
+- [x] Create admin routes [adminRoutes.js](file:///D:/netflix-clone/routes/adminRoutes.js) and mount them in [app.js](file:///D:/netflix-clone/app.js).
+- [x] Create admin dashboard view [dashboard.ejs](file:///D:/netflix-clone/views/pages/admin/dashboard.ejs) (total users, watchlist counts, app statistics).
+- [x] Create admin users view [users.ejs](file:///D:/netflix-clone/views/pages/admin/users.ejs) (list and delete users).
+- [x] Protect all admin routes using `protectRoute` and `roleMiddleware` (restricted to `admin` role only).
+- [x] Create admin integration tests [admin.test.js](file:///D:/netflix-clone/tests/admin.test.js) and verify all test cases pass successfully.
+
+---
